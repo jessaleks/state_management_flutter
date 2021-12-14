@@ -6,5 +6,6 @@ class Plan {
 
   int get completeCount => tasks.where((task) => task.complete).length;
 
-  String get completenessMessage => '$completeCount out of $tasks.length tasks';
+  String get completenessMessage =>
+      '$completeCount out of ${tasks.length} tasks completed';
 }

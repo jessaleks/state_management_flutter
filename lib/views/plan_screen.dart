@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:master_plan/models/data_layer.dart';
 
+import '../plan_provider.dart';
+
 class PlanScreen extends StatefulWidget {
   const PlanScreen({Key? key}) : super(key: key);
 
@@ -9,7 +11,6 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  final plan = Plan();
   late ScrollController scrollController;
 
   @override
@@ -30,14 +31,21 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final plan = PlanProvider.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Master Plan')),
-      body: _buildList(),
+      body: Column(
+        children: [
+          Expanded(child: _buildList()),
+          SafeArea(child: Text(plan.completenessMessage))
+        ],
+      ),
       floatingActionButton: _buildAddTaskButton(),
     );
   }
 
   Widget _buildAddTaskButton() {
+    final plan = PlanProvider.of(context);
     return FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
@@ -48,6 +56,7 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildList() {
+    final plan = PlanProvider.of(context);
     return ListView.builder(
       // the scrollController here because of an iOS specific hack
       controller: scrollController,
@@ -65,8 +74,9 @@ class _PlanScreenState extends State<PlanScreen> {
               task.complete = selected!;
             });
           }),
-      title: TextField(
-        onChanged: (text) {
+      title: TextFormField(
+        initialValue: task.description,
+        onFieldSubmitted: (text) {
           setState(() {
             task.description = text;
           });
