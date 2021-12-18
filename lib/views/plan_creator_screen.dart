@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:master_plan/plan_provider.dart';
-import '../models/data_layer.dart';
 import 'plan_screen.dart';
 
 class PlanScreenCreator extends StatefulWidget {
@@ -33,12 +32,10 @@ class _PlanScreenCreatorState extends State<PlanScreenCreator> {
     void addPlan() {
       final text = textController.text;
 
-      if (text.isEmpty) {
-        return;
-      }
+      // All the business logic has been removed from this 'view' method!
+      final controller = PlanProvider.of(context);
+      controller.addNewPlan(text);
 
-      final plan = Plan()..name = text;
-      PlanProvider.of(context).add(plan);
       textController.clear();
       FocusScope.of(context).requestFocus(FocusNode());
       setState(() {});
@@ -62,7 +59,7 @@ class _PlanScreenCreatorState extends State<PlanScreenCreator> {
   }
 
   Widget _buildMasterPlans() {
-    final plans = PlanProvider.of(context);
+    final plans = PlanProvider.of(context).plans;
 
     if (plans.isEmpty) {
       return Column(
@@ -83,13 +80,23 @@ class _PlanScreenCreatorState extends State<PlanScreenCreator> {
           itemBuilder: (context, index) {
             final plan = plans[index];
 
-            return ListTile(
-                title: Text(plan.name),
-                subtitle: Text(plan.completenessMessage),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => PlanScreen(plan: plan)));
-                });
+            return Dismissible(
+              key: ValueKey(plan),
+              background: Container(color: Colors.red),
+              direction: DismissDirection.endToStart,
+              onDismissed: (_) {
+                final controller = PlanProvider.of(context);
+                controller.deletePlan(plan);
+                setState(() {});
+              },
+              child: ListTile(
+                  title: Text(plan.name),
+                  subtitle: Text(plan.completenessMessage),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => PlanScreen(plan: plan)));
+                  }),
+            );
           }),
     );
   }

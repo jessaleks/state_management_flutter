@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return PlanProvider(
       child: MaterialApp(
         theme: ThemeData(primarySwatch: Colors.purple),
-        home: PlanScreenCreator(),
+        home: const PlanScreenCreator(),
       ),
     );
   }
