@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:master_plan/models/data_layer.dart';
 
-import '../plan_provider.dart';
-
 class PlanScreen extends StatefulWidget {
-  const PlanScreen({Key? key}) : super(key: key);
+  final Plan plan;
+
+  PlanScreen({Key? key, required this.plan}) : super(key: key);
 
   @override
   State createState() => _PlanScreenState();
@@ -12,6 +12,8 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> {
   late ScrollController scrollController;
+
+  Plan get plan => widget.plan;
 
   @override
   void initState() {
@@ -31,7 +33,6 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final plan = PlanProvider.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Master Plan')),
       body: Column(
@@ -45,7 +46,6 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildAddTaskButton() {
-    final plan = PlanProvider.of(context);
     return FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
@@ -56,7 +56,6 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildList() {
-    final plan = PlanProvider.of(context);
     return ListView.builder(
       // the scrollController here because of an iOS specific hack
       controller: scrollController,
