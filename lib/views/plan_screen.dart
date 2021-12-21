@@ -67,6 +67,8 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildTaskTile(Task task) {
+    // Dismissable lets you dismiss the tile by swiping to the direction determined
+    // by the "direction" property
     return Dismissible(
       key: ValueKey(task),
       background: Container(color: Colors.red),
